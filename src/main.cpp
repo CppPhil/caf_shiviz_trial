@@ -1,10 +1,19 @@
 #include <algorithm>
-#include <iterator>
 #include <string>
 
 #include "caf/all.hpp"
 
+#include "test_profiler.hpp"
 #include "upper.hpp"
+
+namespace {
+struct config : caf::actor_system_config {
+  cst::test_profiler test_profiler;
+
+  config() {
+    profiler = &test_profiler;
+  }
+};
 
 caf::behavior test_actor_function() {
   return {
@@ -25,8 +34,9 @@ void test_actor_buddy_function(caf::event_based_actor* self,
                       << "\".\n";
     });
 }
+} // namespace
 
-void caf_main(caf::actor_system& sys) {
+void caf_main(caf::actor_system& sys, [[maybe_unused]] const config& config) {
   auto test_actor = sys.spawn(&test_actor_function);
   sys.spawn(&test_actor_buddy_function, test_actor);
 }

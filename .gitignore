@@ -655,3 +655,7 @@ MigrationBackup/
 
 # build directory
 build
+
+# .idea directory
+.idea
+

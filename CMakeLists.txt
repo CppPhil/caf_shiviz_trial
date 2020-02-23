@@ -24,10 +24,12 @@ find_package(Threads REQUIRED)
 set(LIB_NAME ShiViz_Trial_Lib)
 
 set(LIB_HEADERS
-    include/upper.hpp)
+    include/upper.hpp
+    include/test_profiler.hpp)
    
 set(LIB_SOURCES
-    src/upper.cpp)
+    src/upper.cpp
+    src/test_profiler.cpp)
    
 add_library(
     ${LIB_NAME}
