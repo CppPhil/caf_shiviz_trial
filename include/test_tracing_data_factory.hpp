@@ -9,6 +9,10 @@
 namespace cst {
 class test_tracing_data_factory : public caf::tracing_data_factory {
 public:
+  test_tracing_data_factory();
+
+  ~test_tracing_data_factory() override;
+
   caf::error
   deserialize(caf::deserializer& source,
               std::unique_ptr<caf::tracing_data>& dst) const override;
