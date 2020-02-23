@@ -11,9 +11,7 @@ cd $ROOT_DIR/external
 
 cd ./actor-framework
 
-cp ./CMakeLists.txt ./CMakeLists.txt.backup
-rm -f ./CMakeLists.txt
-cp $ROOT_DIR/CustomCafCMakeLists.txt ./CMakeLists.txt
+git am < $ROOT_DIR/fix_tracing_data_factory.patch
 
 ./configure --libs-only --with-actor-profiler
 
@@ -21,7 +19,7 @@ cd ./build
 
 make -j$(nproc)
 
-mv $ROOT_DIR/external/actor-framework/CMakeLists.txt.backup $ROOT_DIR/external/actor-framework/CMakeLists.txt
+git reset --hard HEAD~1
 
 cd $PREVIOUS_DIRECTORY
 
