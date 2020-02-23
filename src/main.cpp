@@ -4,14 +4,17 @@
 #include "caf/all.hpp"
 
 #include "test_profiler.hpp"
+#include "test_tracing_data_factory.hpp"
 #include "upper.hpp"
 
 namespace {
 struct config : caf::actor_system_config {
   cst::test_profiler test_profiler;
+  cst::test_tracing_data_factory test_tracing_context;
 
   config() {
     profiler = &test_profiler;
+    tracing_context = &test_tracing_context;
   }
 };
 

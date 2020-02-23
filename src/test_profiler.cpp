@@ -1,7 +1,9 @@
 #include <cstdarg>
 #include <cstdio>
+#include <memory>
 
 #include "test_profiler.hpp"
+#include "test_tracing_data.hpp"
 
 namespace cst {
 namespace {
@@ -67,16 +69,19 @@ void test_profiler::after_processing(
   P("%s", caf::to_string(result).data());
 }
 
-void test_profiler::before_sending(
-  [[maybe_unused]] const caf::local_actor& self,
-  caf::mailbox_element& element) {
+void test_profiler::before_sending(const caf::local_actor& self,
+                                   caf::mailbox_element& element) {
   P("%s", element.content().stringify().data());
+
+  element.tracing_id = std::make_unique<test_tracing_data>(self.name());
 }
 
 void test_profiler::before_sending_scheduled(
-  [[maybe_unused]] const caf::local_actor& self,
+  const caf::local_actor& self,
   [[maybe_unused]] caf::actor_clock::time_point timeout,
   caf::mailbox_element& element) {
   P("%s", element.content().stringify().data());
+
+  element.tracing_id = std::make_unique<test_tracing_data>(self.name());
 }
 } // namespace cst

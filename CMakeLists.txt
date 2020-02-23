@@ -25,11 +25,15 @@ set(LIB_NAME ShiViz_Trial_Lib)
 
 set(LIB_HEADERS
     include/upper.hpp
-    include/test_profiler.hpp)
+    include/test_profiler.hpp
+    include/test_tracing_data.hpp
+    include/test_tracing_data_factory.hpp)
    
 set(LIB_SOURCES
     src/upper.cpp
-    src/test_profiler.cpp)
+    src/test_profiler.cpp
+    src/test_tracing_data.cpp
+    src/test_tracing_data_factory.cpp)
    
 add_library(
     ${LIB_NAME}
@@ -60,6 +64,12 @@ target_include_directories(
     ${LIB_NAME}
     PUBLIC
     ${CAF_ShiViz_Trial_SOURCE_DIR}/include
+)
+
+target_compile_definitions(
+    ${LIB_NAME}
+    PUBLIC
+    CAF_ENABLE_ACTOR_PROFILER
 )
 
 ### APPLICATION
