@@ -24,10 +24,10 @@ find_package(Threads REQUIRED)
 set(LIB_NAME ShiViz_Trial_Lib)
 
 set(LIB_HEADERS
-   )
+    include/upper.hpp)
    
 set(LIB_SOURCES
-   )
+    src/upper.cpp)
    
 add_library(
     ${LIB_NAME}
@@ -73,3 +73,4 @@ target_link_libraries(
     PRIVATE
     ${LIB_NAME}
 )
+
