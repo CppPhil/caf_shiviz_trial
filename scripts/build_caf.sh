@@ -13,7 +13,7 @@ cd ./actor-framework
 
 git am < $ROOT_DIR/fix_tracing_data_factory.patch
 
-./configure --libs-only --with-actor-profiler
+./configure --no-examples --no-python --no-unit-tests --with-log-level=TRACE --with-actor-profiler
 
 cd ./build
 

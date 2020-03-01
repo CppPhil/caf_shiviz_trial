@@ -1,5 +1,3 @@
-Try to get CAF logging (CAF_LOG) to work.
-
 Create diagrams to try to understand caf-vec
 
 Try to make it create something that ShiViz can read.
