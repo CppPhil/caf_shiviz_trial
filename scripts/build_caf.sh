@@ -11,15 +11,21 @@ cd $ROOT_DIR/external
 
 cd ./actor-framework
 
-git am < $ROOT_DIR/fix_tracing_data_factory.patch
+if [ ! -d ./build ] || [ "$1" == "rebuild" ]; then
+    rm -rf ./build
+    
+    git am < $ROOT_DIR/fix_tracing_data_factory.patch
 
-./configure --no-examples --no-python --no-unit-tests --with-log-level=TRACE --with-actor-profiler
+    ./configure --no-examples --no-python --no-unit-tests --with-log-level=TRACE --with-actor-profiler
 
-cd ./build
+    cd ./build
 
-make -j$(nproc)
+    make -j$(nproc)
 
-git reset --hard HEAD~1
+    cd ..
+
+    git reset --hard HEAD~1
+fi
 
 cd $PREVIOUS_DIRECTORY
 
