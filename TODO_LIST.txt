@@ -1,6 +1,0 @@
-Figure out why caf-vec doesn't like the log files generated.
-
-Create diagrams to try to understand caf-vec
-
-Try to make it create something that ShiViz can read.
-
