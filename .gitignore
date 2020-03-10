@@ -659,3 +659,6 @@ build
 # .idea directory
 .idea
 
+# libcaf build backup
+caf_build_backup
+
