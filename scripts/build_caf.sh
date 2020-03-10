@@ -11,17 +11,10 @@ cd $ROOT_DIR/external
 
 cd ./actor-framework
 
-if [ ! -d ./build ] || [ "$1" == "rebuild" ]; then
-    rm -rf ./build
-    
-    ./configure --no-examples --no-python --no-unit-tests --with-log-level=TRACE --with-actor-profiler
-
-    cd ./build
-
-    make -j$(nproc)
-
-    cd ..
-fi
+./configure --build-type=Debug --no-examples --no-python --with-log-level=TRACE --with-actor-profiler --with-runtime-checks
+cd build
+make -j$(nproc)
+cd ..
 
 cd $PREVIOUS_DIRECTORY
 
