@@ -7,14 +7,15 @@ readonly PREVIOUS_DIRECTORY=$(pwd)
 
 readonly ROOT_DIR=$DIR/..
 
+readonly CAF_BUILD_DIR=$ROOT_DIR/build/caf
+
 cd $ROOT_DIR/external
 
 cd ./actor-framework
 
-./configure --build-type=Debug --no-examples --no-python --with-log-level=TRACE --with-actor-profiler --with-runtime-checks
-cd build
+./configure --build-dir=$CAF_BUILD_DIR --build-type=Debug --no-examples --no-python --with-log-level=TRACE --with-actor-profiler --with-runtime-checks
+cd $CAF_BUILD_DIR
 make -j$(nproc)
-cd ..
 
 cd $PREVIOUS_DIRECTORY
 

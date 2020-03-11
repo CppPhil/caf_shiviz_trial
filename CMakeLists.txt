@@ -7,7 +7,7 @@ execute_process(
 )
 
 set(CMAKE_MODULE_PATH ${CAF_ShiViz_Trial_SOURCE_DIR}/cmake)
-set(CAF_ROOT_DIR ${CAF_ShiViz_Trial_SOURCE_DIR}/external/actor-framework/build)
+set(CAF_ROOT_DIR ${CAF_ShiViz_Trial_SOURCE_DIR}/build/caf)
 find_package(CAF COMPONENTS core io test)
 
 string(APPEND CMAKE_CXX_FLAGS " -Werror -Wall -Wextra -Wcast-align -Wcast-qual -Wmissing-field-initializers -Wmissing-include-dirs -Wpointer-arith -Wstack-protector -Wstrict-aliasing=2 -Wunreachable-code -Wlogical-op -Wduplicated-cond -Wnull-dereference -Wrestrict -Wno-unknown-pragmas -Wno-unused-function -Wno-deprecated-copy -Wno-pessimizing-move")
