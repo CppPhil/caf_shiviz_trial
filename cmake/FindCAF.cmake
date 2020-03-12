@@ -38,7 +38,8 @@ foreach (comp ${CAF_FIND_COMPONENTS})
         "${CAF_ROOT_DIR}/include"
         "${CAF_ROOT_DIR}/libcaf_${comp}"
         "${CAF_ROOT_DIR}/../libcaf_${comp}"
-        "${CAF_ROOT_DIR}/../../libcaf_${comp}")
+        "${CAF_ROOT_DIR}/../../libcaf_${comp}"
+        "${CAF_ROOT_DIR}/../../external/actor-framework/libcaf_${comp}")
   endif ()
   find_path(CAF_INCLUDE_DIR_${UPPERCOMP}
             NAMES
