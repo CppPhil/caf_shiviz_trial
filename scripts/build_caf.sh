@@ -13,9 +13,9 @@ cd $ROOT_DIR/external
 
 cd ./actor-framework
 
-./configure --build-dir=$CAF_BUILD_DIR --build-type=Debug --no-examples --no-python --with-log-level=TRACE --with-actor-profiler --with-runtime-checks
+CC="ccache gcc" CXX="ccache g++" ./configure --build-dir=$CAF_BUILD_DIR --build-type=Debug --no-examples --no-python --with-log-level=TRACE --with-actor-profiler --with-runtime-checks
 cd $CAF_BUILD_DIR
-make -j$(nproc)
+CC="ccache gcc" CXX="ccache g++" make -j$(nproc)
 
 cd $PREVIOUS_DIRECTORY
 
