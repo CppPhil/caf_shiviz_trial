@@ -21,7 +21,7 @@ void test_profiler::add_actor(const caf::local_actor& self,
   auto span = opentracing::Tracer::Global()->StartSpan("add_actor");
 
   span->SetTag("actor", self.name());
-  span->SetTag("parent", parent->name());
+  span->SetTag("parent", parent == nullptr ? "null" : parent->name());
 }
 
 void test_profiler::remove_actor(const caf::local_actor& actor) {
