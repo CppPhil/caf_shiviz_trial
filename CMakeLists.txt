@@ -39,13 +39,15 @@ set(LIB_HEADERS
     include/upper.hpp
     include/test_profiler.hpp
     include/test_tracing_data.hpp
-    include/test_tracing_data_factory.hpp)
+    include/test_tracing_data_factory.hpp
+    include/setup_tracer.hpp)
    
 set(LIB_SOURCES
     src/upper.cpp
     src/test_profiler.cpp
     src/test_tracing_data.cpp
-    src/test_tracing_data_factory.cpp)
+    src/test_tracing_data_factory.cpp
+    src/setup_tracer.cpp)
    
 add_library(
     ${LIB_NAME}

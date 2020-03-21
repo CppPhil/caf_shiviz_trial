@@ -1,9 +1,12 @@
 #include <algorithm>
+#include <cstdio>
 #include <string>
 
 #include "caf/all.hpp"
 
 #include "test_profiler.hpp"
+
+#include "setup_tracer.hpp"
 #include "test_tracing_data_factory.hpp"
 #include "upper.hpp"
 
@@ -39,7 +42,16 @@ void test_actor_buddy_function(caf::event_based_actor* self,
 }
 } // namespace
 
-void caf_main(caf::actor_system& sys, [[maybe_unused]] const config& config) {
+void caf_main(caf::actor_system& sys, const config& config) {
+  const auto& remainder = config.remainder;
+
+  if (remainder.empty()) {
+    fprintf(stderr,
+            "No YAML config file was passed as a command line argument!\n");
+    return;
+  }
+
+  cst::setup_tracer(remainder[0]);
   auto test_actor = sys.spawn(&test_actor_function);
   sys.spawn(&test_actor_buddy_function, test_actor);
 }
