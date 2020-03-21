@@ -1,5 +1,12 @@
 #!/bin/bash
 
+catch_errors() {
+    printf "\nbuild.sh failed!\n" >&2
+    exit 1
+}
+
+trap catch_errors ERR;
+
 # Directory containing this bash script
 readonly DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
@@ -10,12 +17,16 @@ cd $DIR
 build_type="$1"
 
 if [ -z "$build_type" ]; then
-    build_type="Release"
+    build_type="Debug"
 fi
 
-mkdir build
+if [ ! -d build ]; then
+    mkdir build
+fi
+
 cd build
-cmake -DCMAKE_BUILD_TYPE=$build_type -G "Unix Makefiles" ..
+
+cmake -DCMAKE_BUILD_TYPE=$build_type -DBUILD_TESTING=OFF -DJAEGERTRACING_BUILD_EXAMPLES=OFF -G "Unix Makefiles" ..
 cmake --build . -- -j$(nproc)
 
 cd $PREV_DIR
