@@ -37,7 +37,7 @@ void test_profiler::before_processing(const caf::local_actor& actor,
   printf("before_processing: actor = \"%s\", element: \"%s\"\n", actor.name(),
          element.content().stringify().c_str());
 
-  auto span = opentracing::Tracer::Global()->StartSpan("before_precessing");
+  auto span = opentracing::Tracer::Global()->StartSpan("before_processing");
 
   span->SetTag("actor", actor.name());
   span->SetTag("element", element.content().stringify());
