@@ -43,17 +43,18 @@ void test_actor_buddy_function(caf::event_based_actor* self,
 } // namespace
 
 void caf_main(caf::actor_system& sys, const config& config) {
-  const auto& remainder = config.remainder;
-
-  if (remainder.empty()) {
-    fprintf(stderr,
-            "No YAML config file was passed as a command line argument!\n");
-    return;
-  }
-
-  cst::setup_tracer(remainder[0]);
   auto test_actor = sys.spawn(&test_actor_function);
   sys.spawn(&test_actor_buddy_function, test_actor);
 }
 
-CAF_MAIN()
+int main(int argc, char** argv) {
+  if (argc != 2) {
+    fprintf(stderr,
+            "No YAML config file was passed as a command line argument!\n");
+    return 1;
+  }
+
+  cst::setup_tracer(argv[1]);
+
+  return ::caf::exec_main<>(caf_main, argc, argv);
+}
