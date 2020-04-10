@@ -14,6 +14,8 @@ readonly PREV_DIR=$(pwd)
 
 cd $DIR
 
+./format.sh
+
 build_type="$1"
 
 if [ -z "$build_type" ]; then

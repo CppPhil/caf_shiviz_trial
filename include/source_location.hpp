@@ -5,6 +5,5 @@
 #include <pl/source_line.hpp>
 
 #define CST_SOURCE_LOCATION                                                    \
-  "file: " __FILE__ "\nline: " PL_SOURCE_LINE "\nfunction:"                    \
-  " " \ 
-  + std::string(PL_CURRENT_FUNCTION)
+  "file: " + std::string(__FILE__) + "\nline: " PL_SOURCE_LINE "\nfunction: "  \
+    + std::string(PL_CURRENT_FUNCTION)

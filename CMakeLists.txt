@@ -36,7 +36,10 @@ add_subdirectory(external/jaeger-client-cpp)
 set(LIB_NAME ShiViz_Trial_Lib)
 
 set(LIB_HEADERS
+    include/create_span.hpp
     include/error.hpp
+    include/extract.hpp
+    include/inject.hpp
     include/setup_tracer.hpp
     include/source_location.hpp
     include/test_profiler.hpp
@@ -45,9 +48,12 @@ set(LIB_HEADERS
     include/upper.hpp)
 
 set(LIB_SOURCES
+    src/create_span.cpp
     src/error.cpp
+    src/extract.cpp
+    src/inject.cpp
     src/setup_tracer.cpp
-    src/test_profile.cpp
+    src/test_profiler.cpp
     src/test_tracing_data.cpp
     src/test_tracing_data_factory.cpp
     src/upper.cpp)

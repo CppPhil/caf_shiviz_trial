@@ -8,6 +8,14 @@
 #include "test_profiler.hpp"
 #include "test_tracing_data.hpp"
 
+/* TODO:
+ *  -> Check if there's a tracing_id.
+ *  -> If there's one use that to create a ChildSpan.
+ *  -> If there isn't one or the creation of the ChildSpan failed
+ *     -> Create a new Span.
+ *     -> Put that newly created Span into the tracing_id.
+ */
+
 namespace cst {
 test_profiler::test_profiler() {
   setbuf(stdout, nullptr);
