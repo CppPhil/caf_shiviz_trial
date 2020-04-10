@@ -22,7 +22,7 @@ create_span(const caf::tracing_data* tracing_data,
   if (tracing_data == nullptr)
     return opentracing::Tracer::Global()->StartSpan(operation_name);
 
-  const auto* p = dynamic_cast<test_tracing_data*>(tracing_data);
+  const auto* p = dynamic_cast<const test_tracing_data*>(tracing_data);
 
   if (p == nullptr)
     return opentracing::Tracer::Global()->StartSpan(operation_name);

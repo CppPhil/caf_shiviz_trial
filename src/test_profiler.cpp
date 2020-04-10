@@ -37,8 +37,8 @@ void test_profiler::before_processing(const caf::local_actor& actor,
   span->SetTag("function", PL_CURRENT_FUNCTION);
 }
 
-void test_profiler::after_processing(
-  const caf::local_actor& actor caf::invoke_message_result result) {
+void test_profiler::after_processing(const caf::local_actor& actor,
+                                     caf::invoke_message_result result) {
   auto span = opentracing::Tracer::Global()->StartSpan("after_processing");
 
   span->SetTag("actor", actor.name());
@@ -81,6 +81,6 @@ void test_profiler::before_sending_scheduled(
     return;
   }
 
-  element.tracing_id = std::make_unique<test_tracing>(*inject_res);
+  element.tracing_id = std::make_unique<test_tracing_data>(*inject_res);
 }
 } // namespace cst
