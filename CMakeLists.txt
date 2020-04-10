@@ -72,6 +72,9 @@ target_include_directories(
     PUBLIC
     ${CAF_INCLUDE_DIRS}
     ${CAF_ShiViz_Trial_SOURCE_DIR}/include
+    ${CAF_ShiViz_Trial_SOURCE_DIR}/external/expected/include
+    ${CAF_ShiViz_Trial_SOURCE_DIR}/external/optional/include
+    ${CAF_ShiViz_Trial_SOURCE_DIR}/external/philslib/include
 )
 
 target_compile_definitions(
