@@ -91,6 +91,15 @@ target_compile_definitions(
     CAF_ENABLE_ACTOR_PROFILER
 )
 
+option(VERBOSE_SPANS "Enable verbose spans" OFF)
+if (VERBOSE_SPANS)
+    target_compile_definitions(
+        ${LIB_NAME}
+        PUBLIC
+        VERBOSE_SPANS        
+    )
+endif()
+
 ### APPLICATION
 set(APP_NAME ShiViz_Trial_App)
 

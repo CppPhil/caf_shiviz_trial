@@ -12,20 +12,25 @@
 namespace cst {
 test_profiler::test_profiler() = default;
 
-void test_profiler::add_actor(const caf::local_actor& self,
-                              const caf::local_actor* parent) {
+void test_profiler::add_actor([[maybe_unused]] const caf::local_actor& self,
+                              [[maybe_unused]] const caf::local_actor* parent) {
+#ifdef VERBOSE_SPANS
   auto span = opentracing::Tracer::Global()->StartSpan("add_actor");
 
   span->SetTag("actor", self.name());
   span->SetTag("parent", parent == nullptr ? "null" : parent->name());
   span->SetTag("function", PL_CURRENT_FUNCTION);
+#endif // VERBOSE_SPANS
 }
 
-void test_profiler::remove_actor(const caf::local_actor& actor) {
+void test_profiler::remove_actor([
+  [maybe_unused]] const caf::local_actor& actor) {
+#ifdef VERBOSE_SPANS
   auto span = opentracing::Tracer::Global()->StartSpan("remove_actor");
 
   span->SetTag("actor", actor.name());
   span->SetTag("function", PL_CURRENT_FUNCTION);
+#endif // VERBOSE_SPANS
 }
 
 void test_profiler::before_processing(const caf::local_actor& actor,
@@ -37,13 +42,16 @@ void test_profiler::before_processing(const caf::local_actor& actor,
   span->SetTag("function", PL_CURRENT_FUNCTION);
 }
 
-void test_profiler::after_processing(const caf::local_actor& actor,
-                                     caf::invoke_message_result result) {
+void test_profiler::after_processing(
+  [[maybe_unused]] const caf::local_actor& actor,
+  [[maybe_unused]] caf::invoke_message_result result) {
+#ifdef VERBOSE_SPANS
   auto span = opentracing::Tracer::Global()->StartSpan("after_processing");
 
   span->SetTag("actor", actor.name());
   span->SetTag("result", caf::to_string(result));
   span->SetTag("function", PL_CURRENT_FUNCTION);
+#endif // VERBOSE_SPANS
 }
 
 void test_profiler::before_sending(const caf::local_actor& actor,
