@@ -36,18 +36,19 @@ add_subdirectory(external/jaeger-client-cpp)
 set(LIB_NAME ShiViz_Trial_Lib)
 
 set(LIB_HEADERS
-    include/upper.hpp
+    include/setup_tracer.hpp
+    include/source_location.hpp
     include/test_profiler.hpp
     include/test_tracing_data.hpp
     include/test_tracing_data_factory.hpp
-    include/setup_tracer.hpp)
-   
+    include/upper.hpp)
+
 set(LIB_SOURCES
-    src/upper.cpp
-    src/test_profiler.cpp
+    src/setup_tracer.cpp
+    src/test_profile.cpp
     src/test_tracing_data.cpp
     src/test_tracing_data_factory.cpp
-    src/setup_tracer.cpp)
+    src/upper.cpp)
    
 add_library(
     ${LIB_NAME}
@@ -61,23 +62,15 @@ target_link_libraries(
     PUBLIC
     Threads::Threads
     jaegertracing
-)
-
-target_link_libraries(
-    ${LIB_NAME}
-    PUBLIC
-    ${CMAKE_DL_LIBS} ${CAF_LIBRARY_CORE} ${CAF_LIBRARY_IO}
+    ${CMAKE_DL_LIBS} 
+    ${CAF_LIBRARY_CORE} 
+    ${CAF_LIBRARY_IO}
 )
 
 target_include_directories(
     ${LIB_NAME}
     PUBLIC
     ${CAF_INCLUDE_DIRS}
-)
-
-target_include_directories(
-    ${LIB_NAME}
-    PUBLIC
     ${CAF_ShiViz_Trial_SOURCE_DIR}/include
 )
 
