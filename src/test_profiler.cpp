@@ -1,93 +1,86 @@
-#include <cstdarg>
 #include <cstdio>
 
 #include <memory>
 
 #include <jaegertracing/Tracer.h>
 
+#include "create_span.hpp"
+#include "inject.hpp"
 #include "test_profiler.hpp"
 #include "test_tracing_data.hpp"
 
-/* TODO:
- *  -> Check if there's a tracing_id.
- *  -> If there's one use that to create a ChildSpan.
- *  -> If there isn't one or the creation of the ChildSpan failed
- *     -> Create a new Span.
- *     -> Put that newly created Span into the tracing_id.
- */
-
 namespace cst {
-test_profiler::test_profiler() {
-  setbuf(stdout, nullptr);
-}
+test_profiler::test_profiler() = default;
 
 void test_profiler::add_actor(const caf::local_actor& self,
                               const caf::local_actor* parent) {
-  printf("add_actor: actor = \"%s\", parent = \"%s\"\n", self.name(),
-         parent != nullptr ? parent->name() : "null");
-
   auto span = opentracing::Tracer::Global()->StartSpan("add_actor");
 
   span->SetTag("actor", self.name());
   span->SetTag("parent", parent == nullptr ? "null" : parent->name());
+  span->SetTag("function", PL_CURRENT_FUNCTION);
 }
 
 void test_profiler::remove_actor(const caf::local_actor& actor) {
-  printf("remove_actor: actor = \"%s\"\n", actor.name());
-
   auto span = opentracing::Tracer::Global()->StartSpan("remove_actor");
 
   span->SetTag("actor", actor.name());
+  span->SetTag("function", PL_CURRENT_FUNCTION);
 }
 
 void test_profiler::before_processing(const caf::local_actor& actor,
                                       const caf::mailbox_element& element) {
-  printf("before_processing: actor = \"%s\", element: \"%s\"\n", actor.name(),
-         element.content().stringify().c_str());
-
-  auto span = opentracing::Tracer::Global()->StartSpan("before_processing");
+  auto span = create_span(element.tracing_id.get(), "before_processing");
 
   span->SetTag("actor", actor.name());
   span->SetTag("element", element.content().stringify());
+  span->SetTag("function", PL_CURRENT_FUNCTION);
 }
 
-void test_profiler::after_processing(const caf::local_actor& actor,
-                                     caf::invoke_message_result result) {
-  printf("after_processing: actor = \"%s\", result: \"%s\"\n", actor.name(),
-         caf::to_string(result).c_str());
-
+void test_profiler::after_processing(
+  const caf::local_actor& actor caf::invoke_message_result result) {
   auto span = opentracing::Tracer::Global()->StartSpan("after_processing");
 
   span->SetTag("actor", actor.name());
   span->SetTag("result", caf::to_string(result));
+  span->SetTag("function", PL_CURRENT_FUNCTION);
 }
 
 void test_profiler::before_sending(const caf::local_actor& actor,
                                    caf::mailbox_element& element) {
-  printf("before_sending: actor = \"%s\", element: \"%s\"\n", actor.name(),
-         element.content().stringify().c_str());
-
-  element.tracing_id = std::make_unique<test_tracing_data>(actor.name());
-
-  auto span = opentracing::Tracer::Global()->StartSpan("before_sending");
+  auto span = create_span(element.tracing_id.get(), "before_sending");
 
   span->SetTag("actor", actor.name());
   span->SetTag("element", element.content().stringify());
+  span->SetTag("function", PL_CURRENT_FUNCTION);
+
+  const auto inject_res = inject(span->context());
+
+  if (!inject_res.has_value()) {
+    fprintf(stderr, "%s: inject failed!\n", PL_CURRENT_FUNCTION);
+    return;
+  }
+
+  element.tracing_id = std::make_unique<test_tracing_data>(*inject_res);
 }
 
 void test_profiler::before_sending_scheduled(
   const caf::local_actor& actor, caf::actor_clock::time_point timeout,
   caf::mailbox_element& element) {
-  printf("before_sending_scheduled: actor = \"%s\", element: \"%s\"\n",
-         actor.name(), element.content().stringify().c_str());
-
-  element.tracing_id = std::make_unique<test_tracing_data>(actor.name());
-
-  auto span
-    = opentracing::Tracer::Global()->StartSpan("before_sending_scheduled");
+  auto span = create_span(element.tracing_id.get(), "before_sending_scheduled");
 
   span->SetTag("actor", actor.name());
   span->SetTag("timeout", timeout.time_since_epoch().count());
   span->SetTag("element", element.content().stringify());
+  span->SetTag("function", PL_CURRENT_FUNCTION);
+
+  const auto inject_res = inject(span->context());
+
+  if (!inject_res.has_value()) {
+    fprintf(stderr, "%s: inject failed!\n", PL_CURRENT_FUNCTION);
+    return;
+  }
+
+  element.tracing_id = std::make_unique<test_tracing>(*inject_res);
 }
 } // namespace cst
