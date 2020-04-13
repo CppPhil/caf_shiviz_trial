@@ -56,5 +56,7 @@ int main(int argc, char** argv) {
 
   cst::setup_tracer(argv[1]);
 
+  caf::exec_main_init_meta_objects<>();
+  caf::core::init_global_meta_objects();
   return ::caf::exec_main<>(caf_main, argc, argv);
 }
