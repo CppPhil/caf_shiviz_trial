@@ -38,7 +38,7 @@ void test_profiler::before_processing(const caf::local_actor& actor,
   auto span = create_span(element.tracing_id.get(), "before_processing");
 
   span->SetTag("actor", actor.name());
-  span->SetTag("element", element.content().stringify());
+  span->SetTag("element", caf::to_string(element.content()));
   span->SetTag("function", PL_CURRENT_FUNCTION);
 }
 
@@ -59,7 +59,7 @@ void test_profiler::before_sending(const caf::local_actor& actor,
   auto span = create_span(element.tracing_id.get(), "before_sending");
 
   span->SetTag("actor", actor.name());
-  span->SetTag("element", element.content().stringify());
+  span->SetTag("element", caf::to_string(element.content()));
   span->SetTag("function", PL_CURRENT_FUNCTION);
 
   const auto inject_res = inject(span->context());
@@ -79,7 +79,7 @@ void test_profiler::before_sending_scheduled(
 
   span->SetTag("actor", actor.name());
   span->SetTag("timeout", timeout.time_since_epoch().count());
-  span->SetTag("element", element.content().stringify());
+  span->SetTag("element", caf::to_string(element.content()));
   span->SetTag("function", PL_CURRENT_FUNCTION);
 
   const auto inject_res = inject(span->context());
