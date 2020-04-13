@@ -22,7 +22,7 @@ string(
 )
 string(APPEND CMAKE_CXX_FLAGS_DEBUG " -g -O0")
 string(APPEND CMAKE_CXX_FLAGS_RELEASE
-       " -O3 -march=native -funroll-loops -flto -fwhole-program -DNDEBUG")
+       " -O3 -march=native -funroll-loops -flto -DNDEBUG")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
