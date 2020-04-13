@@ -1,2 +1,0 @@
-Add formatting of CMakeLists.txt files to format.sh
-
