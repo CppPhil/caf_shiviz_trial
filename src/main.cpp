@@ -2,11 +2,11 @@
 #include <cstdio>
 #include <string>
 
-#include "caf/all.hpp"
+#include <caf/all.hpp>
 
-#include "test_profiler.hpp"
-
+#include "args.hpp"
 #include "setup_tracer.hpp"
+#include "test_profiler.hpp"
 #include "test_tracing_data_factory.hpp"
 #include "upper.hpp"
 
@@ -56,7 +56,9 @@ int main(int argc, char** argv) {
 
   cst::setup_tracer(argv[1]);
 
+  static cst::args args(argc, argv, [](int i) { return i != 1; });
+
   caf::exec_main_init_meta_objects<>();
   caf::core::init_global_meta_objects();
-  return ::caf::exec_main<>(caf_main, argc, argv);
+  return ::caf::exec_main<>(caf_main, args.argc(), args.argv());
 }

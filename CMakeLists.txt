@@ -36,6 +36,7 @@ add_subdirectory(external/jaeger-client-cpp)
 set(LIB_NAME ShiViz_Trial_Lib)
 
 set(LIB_HEADERS
+    include/args.hpp
     include/create_span.hpp
     include/error.hpp
     include/extract.hpp
@@ -48,6 +49,7 @@ set(LIB_HEADERS
     include/upper.hpp)
 
 set(LIB_SOURCES
+    src/args.cpp
     src/create_span.cpp
     src/error.cpp
     src/extract.cpp
