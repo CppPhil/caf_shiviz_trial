@@ -24,13 +24,23 @@ set(CMAKE_CXX_EXTENSIONS ON)
 
 find_package(Threads REQUIRED)
 
-set(CAF_ENABLE_ACTOR_PROFILER ON CACHE BOOL "Enable experimental profiler API" FORCE)
-set(CAF_ENABLE_EXAMPLES OFF CACHE BOOL "Build small programs showcasing CAF features" FORCE)
-set(CAF_ENABLE_TESTING OFF CACHE BOOL "Build unit test suites" FORCE)
+set(CAF_ENABLE_ACTOR_PROFILER
+    ON
+    CACHE BOOL "Enable experimental profiler API" FORCE)
+set(CAF_ENABLE_EXAMPLES
+    OFF
+    CACHE BOOL "Build small programs showcasing CAF features" FORCE)
+set(CAF_ENABLE_TESTING
+    OFF
+    CACHE BOOL "Build unit test suites" FORCE)
 add_subdirectory(external/actor-framework)
 
-set(BUILD_TESTING OFF CACHE BOOL "Build jaeger tests" FORCE)
-set(JAEGERTRACING_BUILD_EXAMPLES OFF CACHE BOOL "Build examples" FORCE)
+set(BUILD_TESTING
+    OFF
+    CACHE BOOL "Build jaeger tests" FORCE)
+set(JAEGERTRACING_BUILD_EXAMPLES
+    OFF
+    CACHE BOOL "Build examples" FORCE)
 add_subdirectory(external/jaeger-client-cpp)
 
 # OBJECT LIBRARY
@@ -63,9 +73,8 @@ set(LIB_SOURCES
 
 add_library(${LIB_NAME} OBJECT ${LIB_HEADERS} ${LIB_SOURCES})
 
-target_link_libraries(
-  ${LIB_NAME} PUBLIC Threads::Threads jaegertracing ${CMAKE_DL_LIBS}
-                     CAF::core CAF::io)
+target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads jaegertracing
+                                         ${CMAKE_DL_LIBS} CAF::core CAF::io)
 
 target_include_directories(
   ${LIB_NAME}
