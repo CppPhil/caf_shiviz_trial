@@ -9,12 +9,6 @@ huntergate(URL "https://github.com/cpp-pm/hunter/archive/v0.23.249.tar.gz" SHA1
 
 project(CAF_ShiViz_Trial VERSION 1.0.0)
 
-execute_process(COMMAND bash
-                        ${CAF_ShiViz_Trial_SOURCE_DIR}/scripts/build_caf.sh)
-
-set(CAF_ROOT_DIR ${CAF_ShiViz_Trial_SOURCE_DIR}/build/caf)
-find_package(CAF COMPONENTS core io test)
-
 string(
   APPEND
   CMAKE_CXX_FLAGS
@@ -30,8 +24,13 @@ set(CMAKE_CXX_EXTENSIONS ON)
 
 find_package(Threads REQUIRED)
 
-set(BUILD_TESTING false)
-set(JAEGERTRACING_BUILD_EXAMPLES false)
+set(CAF_ENABLE_ACTOR_PROFILER ON CACHE BOOL "Enable experimental profiler API" FORCE)
+set(CAF_ENABLE_EXAMPLES OFF CACHE BOOL "Build small programs showcasing CAF features" FORCE)
+set(CAF_ENABLE_TESTING OFF CACHE BOOL "Build unit test suites" FORCE)
+add_subdirectory(external/actor-framework)
+
+set(BUILD_TESTING OFF CACHE BOOL "Build jaeger tests" FORCE)
+set(JAEGERTRACING_BUILD_EXAMPLES OFF CACHE BOOL "Build examples" FORCE)
 add_subdirectory(external/jaeger-client-cpp)
 
 # OBJECT LIBRARY
@@ -66,7 +65,7 @@ add_library(${LIB_NAME} OBJECT ${LIB_HEADERS} ${LIB_SOURCES})
 
 target_link_libraries(
   ${LIB_NAME} PUBLIC Threads::Threads jaegertracing ${CMAKE_DL_LIBS}
-                     ${CAF_LIBRARY_CORE} ${CAF_LIBRARY_IO})
+                     CAF::core CAF::io)
 
 target_include_directories(
   ${LIB_NAME}

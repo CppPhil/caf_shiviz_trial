@@ -65,7 +65,7 @@ fi
 
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=$build_type -DVERBOSE_SPANS=$verbose_spans -DBUILD_TESTING=OFF -DJAEGERTRACING_BUILD_EXAMPLES=OFF -G "Unix Makefiles" ..
+cmake -DCMAKE_BUILD_TYPE=$build_type -DVERBOSE_SPANS=$verbose_spans -G "Unix Makefiles" ..
 cmake --build . -- -j$(nproc)
 
 cd $PREV_DIR
