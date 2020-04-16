@@ -27,13 +27,19 @@ std::unique_ptr<opentracing::Span> create_span_impl(
 std::unique_ptr<opentracing::Span>
 create_span(const caf::tracing_data* tracing_data,
             const std::string& operation_name) {
-  if (tracing_data == nullptr)
+  if (tracing_data == nullptr) {
+    fprintf(stderr, "Span with operation name \"%s\" has no parent!\n",
+            operation_name.c_str());
     return opentracing::Tracer::Global()->StartSpan(operation_name);
+  }
 
   const auto* p = dynamic_cast<const test_tracing_data*>(tracing_data);
 
-  if (p == nullptr)
+  if (p == nullptr) {
+    fprintf(stderr, "Span with operation name \"%s\" has no parent!\n",
+            operation_name.c_str());
     return opentracing::Tracer::Global()->StartSpan(operation_name);
+  }
 
   const auto extract_res = extract(p->value);
   return create_span_impl(extract_res, operation_name);

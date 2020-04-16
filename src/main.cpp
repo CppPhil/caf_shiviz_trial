@@ -48,14 +48,14 @@ caf::tracing_data* tracing_data(caf::scheduled_actor* actor) {
 caf::behavior test_actor_function(caf::event_based_actor* self) {
   return {
     [self](std::string s) {
-      //      auto span = cst::create_span(tracing_data(self),
-      //                                   "RECV std::string lambda");
-      //      span->SetTag("input", s);
+      auto span = cst::create_span(tracing_data(self),
+                                   "RECV std::string lambda");
+      span->SetTag("input", s);
 
       std::transform(s.begin(), s.end(), s.begin(),
                      [](auto c) { return upper(c); });
 
-      //      span->SetTag("output", s);
+      span->SetTag("output", s);
 
       return s;
     },
