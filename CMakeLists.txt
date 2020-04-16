@@ -33,6 +33,9 @@ set(CAF_ENABLE_EXAMPLES
 set(CAF_ENABLE_TESTING
     OFF
     CACHE BOOL "Build unit test suites" FORCE)
+set(CAF_LOG_LEVEL
+    "TRACE"
+    CACHE STRING "Set log verbosity of CAF components" FORCE)
 add_subdirectory(external/actor-framework)
 
 set(BUILD_TESTING
