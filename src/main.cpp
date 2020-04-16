@@ -5,6 +5,7 @@
 #include <caf/all.hpp>
 
 #include "args.hpp"
+#include "create_span.hpp"
 #include "setup_tracer.hpp"
 #include "test_profiler.hpp"
 #include "test_tracing_data_factory.hpp"
@@ -21,12 +22,41 @@ struct config : caf::actor_system_config {
   }
 };
 
-caf::behavior
-test_actor_function([[maybe_unused]] caf::event_based_actor* self) {
+/* scheduled_actor::peek_at_next_mailbox_element() -> mailbox_element*
+ *
+ *
+ * scheduled_actor::mailbox() -> intrusive::fifo_inbox<mailbox_policy>&
+ * mailbox_policy::mapped_type = mailbox_element;
+ * intrusive::fifo_inbox<mailbox_policy>::peek() -> mailbox_element*;
+ *
+ * tracing_data_ptr mailbox_element::tracing_id;
+ * using tracing_data_ptr = std::unique_ptr<tracing_data>;
+ */
+
+caf::tracing_data* tracing_data(caf::scheduled_actor* actor) {
+  if (actor == nullptr)
+    return nullptr;
+
+  auto* mailbox_element = actor->peek_at_next_mailbox_element();
+
+  if (mailbox_element == nullptr)
+    return nullptr;
+
+  return mailbox_element->tracing_id.get();
+}
+
+caf::behavior test_actor_function(caf::event_based_actor* self) {
   return {
-    [](std::string s) {
+    [self](std::string s) {
+      //      auto span = cst::create_span(tracing_data(self),
+      //                                   "RECV std::string lambda");
+      //      span->SetTag("input", s);
+
       std::transform(s.begin(), s.end(), s.begin(),
                      [](auto c) { return upper(c); });
+
+      //      span->SetTag("output", s);
+
       return s;
     },
   };
