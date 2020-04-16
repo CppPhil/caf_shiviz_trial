@@ -21,7 +21,8 @@ struct config : caf::actor_system_config {
   }
 };
 
-caf::behavior test_actor_function() {
+caf::behavior
+test_actor_function([[maybe_unused]] caf::event_based_actor* self) {
   return {
     [](std::string s) {
       std::transform(s.begin(), s.end(), s.begin(),
