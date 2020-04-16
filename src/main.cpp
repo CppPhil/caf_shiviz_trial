@@ -37,7 +37,7 @@ caf::tracing_data* tracing_data(caf::scheduled_actor* actor) {
   if (actor == nullptr)
     return nullptr;
 
-  auto* mailbox_element = actor->peek_at_next_mailbox_element();
+  auto* mailbox_element = actor->mailbox().peek();
 
   if (mailbox_element == nullptr)
     return nullptr;
