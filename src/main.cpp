@@ -22,22 +22,11 @@ struct config : caf::actor_system_config {
   }
 };
 
-/* scheduled_actor::peek_at_next_mailbox_element() -> mailbox_element*
- *
- *
- * scheduled_actor::mailbox() -> intrusive::fifo_inbox<mailbox_policy>&
- * mailbox_policy::mapped_type = mailbox_element;
- * intrusive::fifo_inbox<mailbox_policy>::peek() -> mailbox_element*;
- *
- * tracing_data_ptr mailbox_element::tracing_id;
- * using tracing_data_ptr = std::unique_ptr<tracing_data>;
- */
-
 caf::tracing_data* tracing_data(caf::scheduled_actor* actor) {
   if (actor == nullptr)
     return nullptr;
 
-  auto* mailbox_element = actor->mailbox().peek();
+  auto* mailbox_element = actor->current_mailbox_element();
 
   if (mailbox_element == nullptr)
     return nullptr;
