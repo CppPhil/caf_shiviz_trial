@@ -38,7 +38,7 @@ caf::behavior test_actor_function(caf::event_based_actor* self) {
   return {
     [self](std::string s) {
       auto span = cst::create_span(tracing_data(self),
-                                   "RECV std::string lambda");
+                                   "test_actor RECV std::string lambda");
       span->SetTag("input", s);
 
       std::transform(s.begin(), s.end(), s.begin(),
@@ -56,6 +56,10 @@ void test_actor_buddy_function(caf::event_based_actor* self,
   using namespace std::string_literals;
   self->request(buddy, caf::infinite, "HiTheRe"s)
     .then([self](const std::string& result_string) {
+      auto span = cst::create_span(tracing_data(self), "buddy RECV lambda");
+
+      span->SetTag("result_string", result_string);
+
       caf::aout(self) << "test_actor_buddy_function: Got \"" << result_string
                       << "\".\n";
     });
