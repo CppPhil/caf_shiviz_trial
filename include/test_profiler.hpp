@@ -2,6 +2,12 @@
 #include "caf/all.hpp"
 
 namespace cst {
+void set_span_context(const std::string& span_ctx);
+
+void set_span_context(std::string&& span_ctx);
+
+void set_span_context(const char* span_ctx);
+
 class test_profiler : public caf::actor_profiler {
 public:
   test_profiler();

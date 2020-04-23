@@ -6,6 +6,7 @@
 
 #include "args.hpp"
 #include "create_span.hpp"
+#include "inject.hpp"
 #include "setup_tracer.hpp"
 #include "test_profiler.hpp"
 #include "test_tracing_data_factory.hpp"
@@ -40,12 +41,10 @@ caf::behavior test_actor_function(caf::event_based_actor* self) {
       auto span = cst::create_span(tracing_data(self),
                                    "test_actor RECV std::string lambda");
       span->SetTag("input", s);
-
       std::transform(s.begin(), s.end(), s.begin(),
                      [](auto c) { return upper(c); });
-
       span->SetTag("output", s);
-
+      cst::set_span_context(cst::inject(span->context()).value_or(""));
       return s;
     },
   };
@@ -54,6 +53,12 @@ caf::behavior test_actor_function(caf::event_based_actor* self) {
 void test_actor_buddy_function(caf::event_based_actor* self,
                                const caf::actor& buddy) {
   using namespace std::string_literals;
+
+  auto span = cst::create_span(tracing_data(self), "test_actor_buddy_function");
+  span->SetTag("info", "about to send HiTheRe to the other actor");
+
+  cst::set_span_context(cst::inject(span->context()).value_or(""));
+
   self->request(buddy, caf::infinite, "HiTheRe"s)
     .then([self](const std::string& result_string) {
       auto span = cst::create_span(tracing_data(self), "buddy RECV lambda");

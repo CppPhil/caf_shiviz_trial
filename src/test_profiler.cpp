@@ -10,6 +10,22 @@
 #include "test_tracing_data.hpp"
 
 namespace cst {
+namespace {
+thread_local std::string span_context;
+} // namespace
+
+void set_span_context(const std::string& span_ctx) {
+  span_context = span_ctx;
+}
+
+void set_span_context(std::string&& span_ctx) {
+  span_context = std::move(span_ctx);
+}
+
+void set_span_context(const char* span_ctx) {
+  span_context = span_ctx;
+}
+
 test_profiler::test_profiler() = default;
 
 void test_profiler::add_actor([[maybe_unused]] const caf::local_actor& self,
@@ -56,6 +72,9 @@ void test_profiler::after_processing(
 
 void test_profiler::before_sending(const caf::local_actor& actor,
                                    caf::mailbox_element& element) {
+  if (element.tracing_id == nullptr)
+    element.tracing_id = std::make_unique<test_tracing_data>(span_context);
+
   auto span = create_span(element.tracing_id.get(), "before_sending");
 
   span->SetTag("actor", actor.name());
@@ -75,6 +94,9 @@ void test_profiler::before_sending(const caf::local_actor& actor,
 void test_profiler::before_sending_scheduled(
   const caf::local_actor& actor, caf::actor_clock::time_point timeout,
   caf::mailbox_element& element) {
+  if (element.tracing_id == nullptr)
+    element.tracing_id = std::make_unique<test_tracing_data>(span_context);
+
   auto span = create_span(element.tracing_id.get(), "before_sending_scheduled");
 
   span->SetTag("actor", actor.name());

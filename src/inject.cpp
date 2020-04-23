@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include <sstream>
 
 #include "inject.hpp"
@@ -12,10 +14,10 @@ tl::expected<std::string, error> inject(const opentracing::SpanContext& sc) {
   if (!exp.has_value()) {
     oss.clear();
     oss.str("");
-
     oss << exp.error();
-
-    return CST_UNEXPECTED(oss.str());
+    const auto string = oss.str();
+    fprintf(stderr, "inject failure: \"%s\"\n", string.c_str());
+    return CST_UNEXPECTED(string);
   }
 
   return oss.str();
