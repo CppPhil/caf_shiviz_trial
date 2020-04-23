@@ -4,12 +4,12 @@
 
 #include <caf/all.hpp>
 
-#include "args.hpp"
 #include "create_span.hpp"
 #include "inject.hpp"
-#include "setup_tracer.hpp"
 #include "test_profiler.hpp"
 #include "test_tracing_data_factory.hpp"
+#include "tracer/get.hpp"
+#include "tracer/put.hpp"
 #include "upper.hpp"
 
 namespace {
@@ -36,15 +36,20 @@ caf::tracing_data* tracing_data(caf::scheduled_actor* actor) {
 }
 
 caf::behavior test_actor_function(caf::event_based_actor* self) {
+  cst::tracer::put(self->id());
+
   return {
     [self](std::string s) {
-      auto span = cst::create_span(tracing_data(self),
+      auto span = cst::create_span(cst::tracer::get(self->id()),
+                                   tracing_data(self),
                                    "test_actor RECV std::string lambda");
       span->SetTag("input", s);
       std::transform(s.begin(), s.end(), s.begin(),
                      [](auto c) { return upper(c); });
       span->SetTag("output", s);
-      cst::set_span_context(cst::inject(span->context()).value_or(""));
+      cst::set_span_context(
+        cst::inject(cst::tracer::get(self->id()), span->context())
+          .value_or(""));
       return s;
     },
   };
@@ -54,14 +59,19 @@ void test_actor_buddy_function(caf::event_based_actor* self,
                                const caf::actor& buddy) {
   using namespace std::string_literals;
 
-  auto span = cst::create_span(tracing_data(self), "test_actor_buddy_function");
+  cst::tracer::put(self->id());
+
+  auto span = cst::create_span(cst::tracer::get(self->id()), tracing_data(self),
+                               "test_actor_buddy_function");
   span->SetTag("info", "about to send HiTheRe to the other actor");
 
-  cst::set_span_context(cst::inject(span->context()).value_or(""));
+  cst::set_span_context(
+    cst::inject(cst::tracer::get(self->id()), span->context()).value_or(""));
 
   self->request(buddy, caf::infinite, "HiTheRe"s)
     .then([self](const std::string& result_string) {
-      auto span = cst::create_span(tracing_data(self), "buddy RECV lambda");
+      auto span = cst::create_span(cst::tracer::get(self->id()),
+                                   tracing_data(self), "buddy RECV lambda");
 
       span->SetTag("result_string", result_string);
 
@@ -76,18 +86,4 @@ void caf_main(caf::actor_system& sys, const config& config) {
   sys.spawn(&test_actor_buddy_function, test_actor);
 }
 
-int main(int argc, char** argv) {
-  if (argc != 2) {
-    fprintf(stderr,
-            "No YAML config file was passed as a command line argument!\n");
-    return 1;
-  }
-
-  cst::setup_tracer(argv[1]);
-
-  static cst::args args(argc, argv, [](int i) { return i != 1; });
-
-  caf::exec_main_init_meta_objects<>();
-  caf::core::init_global_meta_objects();
-  return ::caf::exec_main<>(caf_main, args.argc(), args.argv());
-}
+CAF_MAIN()

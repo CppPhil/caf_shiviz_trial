@@ -10,5 +10,5 @@
 
 namespace cst {
 tl::expected<std::unique_ptr<opentracing::SpanContext>, error>
-extract(const std::string& string);
+extract(const opentracing::Tracer* tracer, const std::string& string);
 } // namespace cst

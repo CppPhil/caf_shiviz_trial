@@ -5,11 +5,11 @@
 #include "inject.hpp"
 
 namespace cst {
-tl::expected<std::string, error> inject(const opentracing::SpanContext& sc) {
+tl::expected<std::string, error> inject(const opentracing::Tracer* tracer,
+                                        const opentracing::SpanContext& sc) {
   std::ostringstream oss;
 
-  const opentracing::expected<void> exp(
-    opentracing::Tracer::Global()->Inject(sc, oss));
+  const opentracing::expected<void> exp(tracer->Inject(sc, oss));
 
   if (!exp.has_value()) {
     oss.clear();

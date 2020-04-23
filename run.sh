@@ -14,7 +14,7 @@ readonly PREV_DIR=$(pwd)
 
 cd $DIR
 
-./build/ShiViz_Trial_App $DIR/config.yml
+./build/ShiViz_Trial_App
 
 cd $PREV_DIR
 

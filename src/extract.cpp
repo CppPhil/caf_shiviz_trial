@@ -5,16 +5,16 @@
 namespace cst {
 namespace {
 opentracing::expected<std::unique_ptr<opentracing::SpanContext>>
-extract_impl(const std::string& string) {
+extract_impl(const opentracing::Tracer* tracer, const std::string& string) {
   std::istringstream iss(string);
-  return opentracing::Tracer::Global()->Extract(iss);
+  return tracer->Extract(iss);
 }
 } // namespace
 
 tl::expected<std::unique_ptr<opentracing::SpanContext>, error>
-extract(const std::string& string) {
+extract(const opentracing::Tracer* tracer, const std::string& string) {
   opentracing::expected<std::unique_ptr<opentracing::SpanContext>> exp(
-    extract_impl(string));
+    extract_impl(tracer, string));
 
   if (!exp.has_value()) {
     std::ostringstream oss;

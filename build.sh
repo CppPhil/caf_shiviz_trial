@@ -17,20 +17,17 @@ usage() {
   build.sh [OPTIONS] Builds the project using the supplied options.
 
   EXAMPLE:
-    build.sh --build_type=Debug --verbose_spans=false
+    build.sh --build_type=Debug
 
   OPTIONS:
   -h
     --help                this help text
   
   --build_type=BUILD_TYPE The build type to use (Debug | Release)
-
-  --verbose_spans=BOOLEAN Whether to use verbose spans (true | false)
 EOF
 }
 
 build_type="Debug"
-verbose_spans="false"
 
 while [ "$1" != "" ]; do
   PARAM=`echo $1 | awk -F= '{print $1}'`
@@ -42,9 +39,6 @@ while [ "$1" != "" ]; do
       ;;
     --build_type)
       build_type=$VALUE
-      ;;
-    --verbose_spans)
-      verbose_spans=$VALUE
       ;;
     *)
       echo "ERROR: unknown parameter \"$PARAM\""
@@ -65,7 +59,7 @@ fi
 
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=$build_type -DVERBOSE_SPANS=$verbose_spans -G "Unix Makefiles" ..
+cmake -DCMAKE_BUILD_TYPE=$build_type -G "Unix Makefiles" ..
 cmake --build . -- -j$(nproc)
 
 cd $PREV_DIR

@@ -6,5 +6,6 @@
 #include "error.hpp"
 
 namespace cst {
-tl::expected<std::string, error> inject(const opentracing::SpanContext& sc);
+tl::expected<std::string, error> inject(const opentracing::Tracer* tracer,
+                                        const opentracing::SpanContext& sc);
 } // namespace cst

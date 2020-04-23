@@ -50,28 +50,30 @@ add_subdirectory(external/jaeger-client-cpp)
 set(LIB_NAME ShiViz_Trial_Lib)
 
 set(LIB_HEADERS
-    include/args.hpp
     include/create_span.hpp
+    include/create_tracer.hpp
     include/error.hpp
     include/extract.hpp
     include/inject.hpp
-    include/setup_tracer.hpp
     include/source_location.hpp
     include/test_profiler.hpp
     include/test_tracing_data.hpp
     include/test_tracing_data_factory.hpp
+    include/tracer/get.hpp
+    include/tracer/put.hpp
     include/upper.hpp)
 
 set(LIB_SOURCES
-    src/args.cpp
     src/create_span.cpp
+    src/create_tracer.cpp
     src/error.cpp
     src/extract.cpp
     src/inject.cpp
-    src/setup_tracer.cpp
     src/test_profiler.cpp
     src/test_tracing_data.cpp
     src/test_tracing_data_factory.cpp
+    src/tracer/get.cpp
+    src/tracer/put.cpp
     src/upper.cpp)
 
 add_library(${LIB_NAME} OBJECT ${LIB_HEADERS} ${LIB_SOURCES})
@@ -88,11 +90,6 @@ target_include_directories(
          ${CAF_ShiViz_Trial_SOURCE_DIR}/external/philslib/include)
 
 target_compile_definitions(${LIB_NAME} PUBLIC CAF_ENABLE_ACTOR_PROFILER)
-
-option(VERBOSE_SPANS "Enable verbose spans" OFF)
-if(VERBOSE_SPANS)
-  target_compile_definitions(${LIB_NAME} PUBLIC VERBOSE_SPANS)
-endif()
 
 # APPLICATION
 set(APP_NAME ShiViz_Trial_App)
